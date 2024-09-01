@@ -1,0 +1,11 @@
+{
+  "author": "Kendall Vargas",
+  "devDependencies": {
+    "cypress": "^13.6.3",
+    "mochawesome": "^7.1.3"
+  },
+  "scripts": {
+    "cy:run": "cypress run",
+    "cy:run:chrome": "cypress run -b chrome"
+  }
+}
