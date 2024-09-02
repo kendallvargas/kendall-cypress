@@ -17,7 +17,7 @@ jobs:
         if: always()
         with:
             name: cypress-execution-report
-            path: KendallCy\mochawesome-report
+            path: KendallCy/mochawesome-report
             retention-days: 30
 
       - name: Slack Notification
