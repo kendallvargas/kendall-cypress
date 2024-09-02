@@ -25,7 +25,12 @@ module.exports = defineConfig({
       reportDir: "cypress/mochawesome-report",
       overwrite: false,
       html: false,
-      json: true
+      json: true,
+      charts: true,
+      reportPageTitle: "custom-title",
+      embeddedScreenshots: true,
+      inlineAssets: true,
+      saveAllAttempts: false,
     }
 
 });
