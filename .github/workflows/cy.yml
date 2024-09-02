@@ -10,3 +10,22 @@ jobs:
       # and run all Cypress tests
       - name: Cypress run
         uses: cypress-io/github-action@v6
+        with:
+            command: npm run ui-regression
+      - name: Uploading Artifact
+        uses: actions/upload-artifact@v4
+        if: always()
+        with:
+            name: cypress-execution-report
+            path: KendallCy\mochawesome-report
+            retention-days: 30
+
+      - name: Slack Notification
+        uses: rtCamp/action-slack-notify@v2
+        env:
+          SLACK_COLOR: ${{ job.status }}
+          SLACK_ICON: https://github.com/rtCamp.png?size=48
+          SLACK_MESSAGE: 'New Changes :rocket:'
+          SLACK_TITLE: Regression Test
+          SLACK_USERNAME: kendallvargas
+          SLACK_WEBHOOK: ${{ secrets.SLACK_WEBHOOK }}

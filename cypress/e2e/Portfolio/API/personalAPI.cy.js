@@ -30,7 +30,7 @@ describe("Suite API", () => {
         })
     })
 
-    it.only('Invalid API', () => {
+    it('Invalid API', () => {
         cy.request({
             method: 'POST',
             url: 'https://demoqa.com/BookStore/v1/Books',
