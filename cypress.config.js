@@ -20,5 +20,12 @@ module.exports = defineConfig({
     },
     specPattern: "**/*.cy.ts",
   },
-  reporter:'mochawesome'
+    reporter:"mochawesome",
+    reporterOptions: {
+      reportDir: "cypress/mochawesome-report",
+      overwrite: false,
+      html: false,
+      json: true
+    }
+
 });

@@ -11,7 +11,7 @@ jobs:
       - name: Cypress run
         uses: cypress-io/github-action@v6
         with:
-            command: npm run ui-regression
+            command: npm run iteration-regression
       - name: Uploading Artifact
         uses: actions/upload-artifact@v4
         if: always()

@@ -5,6 +5,8 @@
     "mochawesome": "^7.1.3"
   },
   "scripts": {
-    "ui-regression": "cypress run --browser chrome --spec cypress/e2e/Portfolio/OrangeHRM.cy.js"
+    "ui-regression": "cypress run --browser chrome --spec cypress/e2e/Portfolio/OrangeHRM.cy.js",
+    "API-regression": "cypress run --browser chrome --spec cypress/e2e/Portfolio/API/personalAPI.cy.js",
+    "iteration-regression": "cypress run --browser chrome --spec cypress/e2e/Portfolio/iteration.cy.js"
   }
 }
