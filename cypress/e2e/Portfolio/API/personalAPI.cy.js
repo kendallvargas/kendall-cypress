@@ -3,7 +3,7 @@ describe("Suite API", () => {
     it('Bookstore section', () => {
         cy.request({
             method: 'GET',
-            url: 'https://demoqa.com/BookStore/v1/Books',
+            url: `${Cypress.env("demoqa")}/BookStore/v1/Books`,
         }).then((response) => {
             cy.log('Books are having expected data structure').then(()=>{
                 expect(response.body.books).to.be.an('array')
@@ -33,17 +33,18 @@ describe("Suite API", () => {
     it('Invalid API', () => {
         cy.request({
             method: 'POST',
-            url: 'https://demoqa.com/BookStore/v1/Books',
+            url: `${Cypress.env("demoqa")}/BookStore/v1/Books`,
             failOnStatusCode: false,
         }).then((response)=>{
             expect(response.status).not.be.eq(200)
         })
     });
 
-    it('Creating account', () => {
+    // only run when new account needs to be created
+    it.skip('Creating account', () => {
             cy.request({
                 method: 'POST',
-                url: 'https://demoqa.com/Account/v1/User',
+                url: `${Cypress.env("demoqa")}/Account/v1/User`,
                 body: {
                     userName: 'tetetsteste',
                     password: "P@ssw0rd!1",
@@ -62,7 +63,7 @@ describe("Suite API", () => {
         cy.log(userID)
         cy.request({
             method: 'POST',
-            url: 'https://demoqa.com/Account/v1/GenerateToken',
+            url: `${Cypress.env("demoqa")}/Account/v1/GenerateToken`,
             body: {
                 userName: "testtesterss",
                 password: "P@ssw0rd!1",
@@ -80,7 +81,7 @@ describe("Suite API", () => {
         const authorization = `Bearer ${tokenID}`
         const request = {
             method: 'GET',
-            url: `https://demoqa.com/Account/v1/User/${userID}`,
+            url: `${Cypress.env("demoqa")}/Account/v1/User${userID}`,
             headers: {
                 authorization,
               },

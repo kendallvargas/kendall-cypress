@@ -7,6 +7,7 @@
   "scripts": {
     "ui-regression": "cypress run --browser chrome --spec cypress/e2e/Portfolio/OrangeHRM.cy.js",
     "API-regression": "cypress run --browser chrome --spec cypress/e2e/Portfolio/API/personalAPI.cy.js",
-    "iteration-regression": "cypress run --browser chrome --spec cypress/e2e/Portfolio/iteration.cy.js"
+    "iteration-regression": "cypress run --browser chrome --spec cypress/e2e/Portfolio/iteration.cy.js",
+    "e2e-regression": "npm run ui-regression && npm run API-regression && npm run iteration-regression"
   }
 }

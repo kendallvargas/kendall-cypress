@@ -1,7 +1,7 @@
 describe('Iteration practice Cypress website', () => {
 
     it('IC01: Iterating and checking first value expects second value', () => {
-        cy.visit('https://docs.cypress.io/api/commands/each')
+        cy.visit(`${Cypress.env("cypressweb")}/api/commands/each`)
 
         cy.get('.footer--dark').within(() => {
             cy.get('.footer__item').should('have.length', 13)
@@ -28,7 +28,7 @@ describe('Iteration practice Cypress website', () => {
     });
 
     it('TC02: Iterating title and validating has expected text', () => {
-        cy.visit('https://docs.cypress.io/api/commands/each')
+        cy.visit(`${Cypress.env("cypressweb")}/api/commands/each`)
 
         cy.get('.footer--dark').within(() => {
             cy.get('.footer__title').should('have.length', 4)
@@ -46,8 +46,7 @@ describe('Iteration practice Cypress website', () => {
     })
 
     it('TC03: Dropdown menu section, validating class and link redirection is correct', () => {
-        cy.visit('https://docs.cypress.io/api/commands/as')
-
+        cy.visit(`${Cypress.env("cypressweb")}/api/commands/as`)
         cy.get('.navbar__inner').within(() => {
             cy.get('.navbar__link').should('have.length', 6)
             cy.wrap([

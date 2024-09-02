@@ -10,6 +10,8 @@ module.exports = defineConfig({
   
     env: {
       OrangeHRM: "https://opensource-demo.orangehrmlive.com",
+      demoqa: "https://demoqa.com",
+      cypressweb: "https://docs.cypress.io",
     },
   },
 
@@ -26,11 +28,6 @@ module.exports = defineConfig({
       overwrite: false,
       html: false,
       json: true,
-      charts: true,
-      reportPageTitle: "custom-title",
-      embeddedScreenshots: true,
-      inlineAssets: true,
-      saveAllAttempts: false,
     }
 
 });
