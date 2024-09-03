@@ -342,7 +342,7 @@ Cypress.Commands.add('saveButton', () => {
 })
 
 Cypress.Commands.add('saveButtonType', () => {
-    cy.get('button[type="button"]')
+    cy.get('button[type="button"]', {timeout : 6000})
 })
 Cypress.Commands.add('searchButton', () => {
     cy.contains('Search')

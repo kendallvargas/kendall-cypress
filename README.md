@@ -22,6 +22,7 @@ git clone https://github.com/kendallvargas/kendall-cypress.git
 **Install the dependencies.**
 Navigate to the project directory and run the following command to install the required dependencies:
 ```bash
+cd kendall-cypress
 npm install
 ```
 
@@ -47,7 +48,7 @@ npm run ui-regression && npm run API-regression && npm run iteration-regression
 
 ### **Sites used:**
 Example of the website that was used for the Web E2E: [OrangeHR](https://www.orangehrm.com/), practice site used for this project: [DemoOrangeHR](https://opensource-demo.orangehrmlive.com/web/index.php/auth/login).
-For the API testing: [DemoQABookstore](https://demoqa.com/swagger/)
+For the API testing: [DemoQABookstore](https://demoqa.com/swagger/) - 
 For iteration: [CypressWeb](https://docs.cypress.io)
 ### **Test execution with GitHub Action**
 With every push made to the **master branch**, GitHub Action triggers a workflow to execute all Test Suites.
