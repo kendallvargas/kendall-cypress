@@ -134,7 +134,7 @@ Cypress.Commands.add('formFillingNegative', () => {
     cy.saveButton().click()
     cy.get('.oxd-input-group__message').should('have.length', 3)
     cy.get('.oxd-input-group__message').each(($error) => {
-        cy.wrap($error).should('have.text', 'Required');
+        cy.wrap($error).should('have.text', 'Required')
     })
 })
 
@@ -155,7 +155,7 @@ Cypress.Commands.add('failedVacancy', () => {
     cy.saveButton().click()
     cy.get('.oxd-input-group__message').should('have.length', 3)
     cy.get('.oxd-input-group__message').each(($error) => {
-        cy.wrap($error).should('have.text', 'Required');
+        cy.wrap($error).should('have.text', 'Required')
     })
 })
 
@@ -321,8 +321,14 @@ Cypress.Commands.add('deleteBuzz', () => {
 
 })
 
-Cypress.Commands.add('uploadFile', () => {
+Cypress.Commands.add('uploadFileFail', () => {
     cy.get('.oxd-button-icon').click()
+    cy.saveButton().eq(2).click()
+    cy.get('.oxd-input-group__message').should('have.text', 'Required')
+
+})
+
+Cypress.Commands.add('uploadFile', () => {
     cy.get('input[type="file"]').selectFile('cypress/images/imatest.jpg', { force: true })
     cy.get('textarea[placeholder="Type comment here"]').type('Text image posted')
     cy.saveButton().eq(2).click()
@@ -332,7 +338,7 @@ Cypress.Commands.add('uploadFile', () => {
 // LOCATOR SECTION
 
 Cypress.Commands.add('saveButton', () => {
-    cy.get('button[type="submit"]')
+    cy.get('button[type="submit"]', {timeout : 6000})
 })
 
 Cypress.Commands.add('saveButtonType', () => {

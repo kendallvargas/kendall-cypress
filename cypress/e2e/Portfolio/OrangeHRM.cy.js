@@ -98,7 +98,6 @@ describe('User Story | Orange HRM | STORY-007', function() {
     cy.verificationHire()
 
   })
-  
 
   it('TC08: Delete the vacancy for SDET', () => {
     cy.intercept('DELETE', '/web/index.php/api/v2/recruitment/vacancies').as('vacancyDeleted')
@@ -141,7 +140,7 @@ describe('User Story | Orange HRM | STORY-007', function() {
     })
   });
 
-  it.skip('TC11: Applying for a leave', () => {
+  it('TC11: Applying for a leave', () => {
     cy.intercept('POST', '/web/index.php/api/v2/leave/leave-requests').as('leaveSent')
     cy.visit(`${Cypress.env("OrangeHRM")}/web/index.php/leave/applyLeave`)
 
@@ -155,7 +154,7 @@ describe('User Story | Orange HRM | STORY-007', function() {
     })     
   });
 
-  it.skip('TC12: Delete Leave apply', () => {
+  it('TC12: Delete Leave apply', () => {
     cy.intercept('PUT', '/web/index.php/api/v2/leave/employees/leave-requests/**').as('leaveDeleted')
     cy.visit(`${Cypress.env("OrangeHRM")}/web/index.php/leave/viewMyLeaveList`)
 
@@ -166,7 +165,6 @@ describe('User Story | Orange HRM | STORY-007', function() {
     expect(request.request.method).to.be.equal('PUT');
    })
   });
-
 
   it('TC13: Upload a post to the Newsfeed', () => {
     cy.intercept('POST', '/web/index.php/api/v2/buzz/posts').as('buzzPost')
@@ -199,6 +197,7 @@ describe('User Story | Orange HRM | STORY-007', function() {
     cy.intercept('POST' , '/web/index.php/api/v2/pim/employees/7/screen/personal/attachments').as('attachmentPosted')
     cy.visit(`${Cypress.env("OrangeHRM")}/web/index.php/pim/viewPersonalDetails/empNumber/7`)
 
+    cy.uploadFileFail()
     cy.uploadFile()
 
     cy.wait('@attachmentPosted').then((request)=>{

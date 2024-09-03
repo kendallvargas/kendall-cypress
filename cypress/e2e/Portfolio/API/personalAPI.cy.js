@@ -30,16 +30,6 @@ describe("Suite API", () => {
         })
     })
 
-    it('Invalid API', () => {
-        cy.request({
-            method: 'POST',
-            url: `${Cypress.env("demoqa")}/BookStore/v1/Books`,
-            failOnStatusCode: false,
-        }).then((response)=>{
-            expect(response.status).not.be.eq(200)
-        })
-    });
-
     // only run when new account needs to be created
     it.skip('Creating account', () => {
             cy.request({
@@ -81,7 +71,7 @@ describe("Suite API", () => {
         const authorization = `Bearer ${tokenID}`
         const request = {
             method: 'GET',
-            url: `${Cypress.env("demoqa")}/Account/v1/User${userID}`,
+            url: `${Cypress.env("demoqa")}/account/v1/User/${userID}`,
             headers: {
                 authorization,
               },
@@ -93,6 +83,16 @@ describe("Suite API", () => {
             cy.log('Validating expected username').then(()=>{
                 expect(response.body.username).to.be.equal('testtesterss')
             })
+        })
+    });
+
+    it('Invalid API', () => {
+        cy.request({
+            method: 'POST',
+            url: `${Cypress.env("demoqa")}/BookStore/v1/Books`,
+            failOnStatusCode: false,
+        }).then((response)=>{
+            expect(response.status).not.be.eq(200)
         })
     });
 })
