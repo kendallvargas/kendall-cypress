@@ -3,7 +3,7 @@
 ## Hi there! This is my Cypress Automation Project. 
 
 ### **Scope of the Project and how it is structured**
-If you are interested in knowing how the project was structured, you can check it [HERE](https://docs.google.com/document/d/151B2KRpDSS5CaaK_uYU5o3WvyiCiVVF9ng_yAdT7m64/edit?usp=sharing). 
+If you are interested in knowing how the project was structured, you can check it [HERE](https://kendallvargas.notion.site/Automation-Kendall-df83d591e3514c6c8a23cf1646bd806c). 
 
 ### **Dependency used:**
 
