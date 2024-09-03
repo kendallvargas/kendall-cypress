@@ -67,8 +67,10 @@ Additionally, an email is received with an additional notification about the res
 
 
 ### **Preview of the Test Runs in headless mode**
-<video src='https://github.com/user-attachments/assets/2f27d936-b1a7-433f-8f7c-9d23b5f5ec13' width=180><video/>
+
+https://github.com/user-attachments/assets/2f27d936-b1a7-433f-8f7c-9d23b5f5ec13
 
 https://github.com/user-attachments/assets/cd4f2c74-9a2c-4662-8270-f15334425259
 
-https://github.com/user-attachments/assets/790160a8-676f-4f64-af79-414bee2f9c1c
+https://github.com/user-attachments/assets/e051955e-3fdf-4eea-9797-e7bdf69633ac
+
