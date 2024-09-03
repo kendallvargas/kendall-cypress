@@ -7,7 +7,7 @@ If you are interested in knowing how the project was structured, you can check i
 
 ### **Dependency used:**
 
-- Mochawesome reporter https://www.npmjs.com/package/cypress-mochawesome-reporter
+- Mochawesome reporter: https://www.npmjs.com/package/cypress-mochawesome-reporter
 
 ### **General requirements**
 - Install [Node.js](https://nodejs.org/es/download/).
@@ -26,7 +26,7 @@ npm install
 ```
 
 ### **Test Execution**
-Once dependencies are installed, you can run the tests cases using the following commands for each suite:
+Once dependencies are installed, you can run the test cases using the following commands for each suite:
 
 Run the UI regression test with Chrome browser:
 ```bash
@@ -50,8 +50,8 @@ Example of the website that was used for the Web E2E: [OrangeHR](https://www.ora
 For the API testing: [DemoQABookstore](https://demoqa.com/swagger/)
 For iteration: [CypressWeb](https://docs.cypress.io)
 ### **Test execution with GitHub Action**
-Every push made to the **master branch**, GitHub Action is triggering a workflow to execute all Test Suites.
-### **Integration with GitHub Actions, Slack and Artifacts**
+With every push made to the **master branch**, GitHub Action triggers a workflow to execute all Test Suites.
+### **Integration with GitHub Actions, Slack, and Artifacts**
 This project is integrated with GitHub Actions, in every push to master, it will run the automation test execution. Furthermore, a connection has been set up with Artifacts to save and retrieve test reports, and with Slack to get updates regarding the status of test executions.
 
 ### **Test Artifacts**
@@ -60,13 +60,15 @@ With this flow, it can be easier to detect any issue and find it on the artifact
 ![artifact](https://github.com/user-attachments/assets/9bfca110-1227-434f-a44e-edcd9296c370)
 
 ### **Slack notifications**
-When the GitHub action execution is done, a notification is sent through Slack channel with the results of the test. 
+When the GitHub action execution is done, a notification is sent through the Slack channel with the results of the test. 
 Additionally, an email is received with an additional notification about the results. 
 ![cypress_channel](https://github.com/user-attachments/assets/820e1bb1-f365-4f90-9a80-ef31c348ac30)
 ![failure_email](https://github.com/user-attachments/assets/ca674cbf-df26-40f4-a419-9ebf07a5501c)
 
 
 ### **Preview of the Test Runs in headless mode**
-https://github.com/user-attachments/assets/2f27d936-b1a7-433f-8f7c-9d23b5f5ec13
+<video src='https://github.com/user-attachments/assets/2f27d936-b1a7-433f-8f7c-9d23b5f5ec13' width=180><video/>
+
 https://github.com/user-attachments/assets/cd4f2c74-9a2c-4662-8270-f15334425259
+
 https://github.com/user-attachments/assets/790160a8-676f-4f64-af79-414bee2f9c1c
