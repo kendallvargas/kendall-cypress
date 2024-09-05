@@ -8,6 +8,8 @@ If you are interested in knowing how the project was structured, you can check i
 ### **Dependency used:**
 
 - Mochawesome reporter: https://www.npmjs.com/package/cypress-mochawesome-reporter
+- FakerJS: https://www.npmjs.com/package/@faker-js/faker/v/7.6.0
+- RandExp: https://www.npmjs.com/package/randexp
 
 ### **General requirements**
 - Install [Node.js](https://nodejs.org/es/download/).
