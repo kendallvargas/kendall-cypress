@@ -1,5 +1,17 @@
+
 const candidateName = 'John David Doe';
 const hireName = 'Mitchell Harrell'
+
+import { randomizeViewport } from "./helper";
+
+Cypress.Commands.add("setViewport", () => {
+    let size = randomizeViewport();
+    if (Cypress._.isArray(size)) {
+        cy.viewport(size[0], size[1]);
+    } else {
+        cy.viewport(size);
+    }
+});
 
 // command for random character creation
 Cypress.Commands.add('randomStringcreation', () => {

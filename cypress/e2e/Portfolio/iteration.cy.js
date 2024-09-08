@@ -1,5 +1,9 @@
 describe('Iteration practice Cypress website', () => {
 
+  beforeEach(()=>{
+    cy.setViewport();
+  })
+
     it('IC01: Iterating and checking first value expects second value', () => {
         cy.visit(`${Cypress.env("cypressweb")}/api/commands/each`)
 

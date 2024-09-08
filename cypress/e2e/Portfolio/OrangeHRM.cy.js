@@ -1,5 +1,6 @@
 describe('User Story | Orange HRM | STORY-007', function() {
   beforeEach('Precondition: Admin must have login set up', ()=>{
+      cy.setViewport();
       cy.invalidLogin() 
       cy.loginOrange() 
   })
