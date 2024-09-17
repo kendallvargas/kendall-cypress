@@ -37,7 +37,6 @@ describe("Suite API", () => {
         })
     })
 
-    // only run when new account needs to be created
     it('Creating account', () => {
         cy.request({
             method: 'POST',
