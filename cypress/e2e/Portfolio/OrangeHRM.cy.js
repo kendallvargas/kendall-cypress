@@ -131,7 +131,9 @@ describe('User Story | Orange HRM | STORY-007', () => {
     cy.visit(`${Cypress.env("OrangeHRM")}/web/index.php/recruitmentApply/jobs.html`)
     cy.intercept('POST', '/web/index.php/recruitment/public/applicants').as('applicationSent')
 
-    cy.vacancyApply()
+    cy.vacancyApply()    
+    cy.get('.orangehrm-text-center-align').should('have.text', 'Your application has been submitted successfully')
+
     cy.wait("@applicationSent").its("response.statusCode").should("eq", 302);
 
   });

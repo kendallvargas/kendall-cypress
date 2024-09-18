@@ -15,6 +15,7 @@ Cypress.Commands.add("setViewport", () => {
     }
 });
 
+// Assertion of menu options in the left side panel
 Cypress.Commands.add('menuValidation', () => {
     cy.get('.oxd-sidepanel-body').within(() => {
         cy.get('.oxd-main-menu-item-wrapper').should('have.length', 12)
@@ -35,6 +36,7 @@ Cypress.Commands.add('menuValidation', () => {
     })
 })
 
+// Invalid Login Scenario: Submitting invalid username and password
 Cypress.Commands.add('invalidLogin', () => {
     cy.visit('https://opensource-demo.orangehrmlive.com/web/index.php/auth/login')
     cy.get('input[name="username"]').type('3434')
@@ -42,6 +44,7 @@ Cypress.Commands.add('invalidLogin', () => {
     cy.saveButton().click()
 })
 
+// Logging in, positive Scenario
 Cypress.Commands.add('loginOrange', () => {
     cy.session('Kendall', () => {
         cy.visit('https://opensource-demo.orangehrmlive.com/web/index.php/auth/login')
@@ -52,11 +55,13 @@ Cypress.Commands.add('loginOrange', () => {
     })
 })
 
+// Negative Hiring Employee Scenario: Saving form without any information being filled out
 Cypress.Commands.add('hiringEmployeeNegative', () => {
     cy.activeInput().eq(4).clear()
     cy.saveButton().click()
 })
 
+// Positive Hiring Employee Scenario
 Cypress.Commands.add('hiringEmployee', () => {
     cy.get('input[type="file"]').selectFile('cypress/images/imatest.jpg', { force: true })
     cy.get('input[name="firstName"]').type(hireName)
@@ -66,6 +71,7 @@ Cypress.Commands.add('hiringEmployee', () => {
         .type('7777')
 })
 
+// Adding user as an Admin
 Cypress.Commands.add('adminUser', () => {
     const randomPassword = faker.internet.password({ length: 20 })
     const randomUsername = faker.internet.userName()
@@ -86,6 +92,7 @@ Cypress.Commands.add('adminUser', () => {
     cy.saveButton().click()
 })
 
+// Filling the form to add a candidate to the list
 Cypress.Commands.add('formFilling', () => {
     const randEmail = faker.internet.email()
 
@@ -100,6 +107,7 @@ Cypress.Commands.add('formFilling', () => {
     cy.saveButton().click()
 })
 
+// Flow to add a Vacancy for SDET
 Cypress.Commands.add('addingVacancy', () => {
     cy.activeInput().eq(1).type('SDET')
     cy.get('.oxd-select-text--after').click()
@@ -114,6 +122,7 @@ Cypress.Commands.add('addingVacancy', () => {
     cy.saveButton().click()
 })
 
+// Negative Vacancy application Employee Scenario: Saving form without any information being filled out
 Cypress.Commands.add('vacancyApplyFail', () => {
 
     cy.get('.orangehrm-vacancy-card-header').filter(':contains("SDET")').within(() => {
@@ -123,15 +132,16 @@ Cypress.Commands.add('vacancyApplyFail', () => {
     cy.saveButton().click()
 })
 
+// Positive Vacancy application Employee Scenario
 Cypress.Commands.add('vacancyApply', () => {
     cy.get('.orangehrm-vacancy-card-header').filter(':contains("SDET")').within(() => {
         // Validating SDET position is visible on the apply page
         cy.saveButtonType().click()
     })
     cy.formFilling()
-    cy.get('.orangehrm-text-center-align').should('have.text', 'Your application has been submitted successfully')
 })
 
+// Shortlisting the candidate
 Cypress.Commands.add('shortlist', () => {
     cy.get('.oxd-select-text-input').eq(1).click()
     cy.get('div[role="listbox"]').contains('SDET').click()
@@ -146,6 +156,7 @@ Cypress.Commands.add('shortlist', () => {
     cy.log("shortlisting saved")
 })
 
+// After shortlisting, adding the candidate for an interview appointment
 Cypress.Commands.add('interviewSchedule', () => {
     cy.get('.oxd-text--subtitle-2').should('include.text', 'Status: Shortlisted')
     cy.saveButtonType().eq(4).click()
@@ -164,6 +175,7 @@ Cypress.Commands.add('interviewSchedule', () => {
     cy.log("interview scheduled")
 })
 
+// Flow to accept the candidate after passing the interview
 Cypress.Commands.add('interviewPassed', () => {
     cy.saveButtonType().eq(5).click()
     cy.get('.oxd-textarea--resize-vertical').type('Interview passed successfully')
@@ -174,6 +186,7 @@ Cypress.Commands.add('interviewPassed', () => {
     cy.log("interview passed")
 })
 
+// Offering a job
 Cypress.Commands.add('jobOffer', () => {
     cy.saveButtonType().eq(5).click()
     cy.get('.oxd-textarea--resize-vertical').type('Job offer for the SDET position') /
@@ -181,7 +194,7 @@ Cypress.Commands.add('jobOffer', () => {
     cy.log("job offered")
 })
 
-
+// Confirming candidate as hired
 Cypress.Commands.add('verificationHire', () => {
     cy.get('.oxd-text--subtitle-2').should('contain', 'Job Offered')
     cy.saveButtonType().eq(5).click()
@@ -193,6 +206,7 @@ Cypress.Commands.add('verificationHire', () => {
     cy.log("candidate hired")
 })
 
+// Deleting the vacancy added for SDET
 Cypress.Commands.add('deleteVacancy', () => {
     cy.get('.oxd-select-text--after').eq(1).click()
     cy.get('.oxd-select-dropdown').contains('SDET').click()
@@ -204,7 +218,7 @@ Cypress.Commands.add('deleteVacancy', () => {
     cy.deleteConfirm().click()
 })
 
-
+// Deleting hiring information/user
 Cypress.Commands.add('deleteHiringInfo', () => {
     cy.activeInput().eq(1).type('7777')
     cy.searchButton().click()
@@ -213,7 +227,7 @@ Cypress.Commands.add('deleteHiringInfo', () => {
     cy.deleteConfirm().click()
 })
 
-
+// Deleting Candidate information/user
 Cypress.Commands.add('deleteCandidate', () => {
     cy.get('input[placeholder="Enter comma seperated words..."]').type(keyword)   
     cy.searchButton().click()
@@ -222,6 +236,7 @@ Cypress.Commands.add('deleteCandidate', () => {
     cy.deleteConfirm().click()
 })
 
+// Applying for a leave
 Cypress.Commands.add('applyLeave', () => {
     cy.get('.oxd-select-text--after').click()
     cy.contains('CAN').click()
@@ -240,6 +255,7 @@ Cypress.Commands.add('applyLeave', () => {
     cy.saveButton().click()
 })
 
+// Deleting leave application
 Cypress.Commands.add('deleteLeave', () => {
     cy.contains('div', 'Pending Approval (0.50)') 
     .parents('.oxd-table-row') 
@@ -247,11 +263,13 @@ Cypress.Commands.add('deleteLeave', () => {
     .click()
 })
 
+// Posting a note in the feed section
 Cypress.Commands.add('postBuzz', () => {
     cy.get('.oxd-buzz-post-input').type(keyword)
     cy.saveButton().click()
 })
 
+// Deleting the post note
 Cypress.Commands.add('deleteBuzz', () => {
     cy.get('.orangehrm-buzz-post-body-text').eq(0).should('have.text', keyword)
     cy.saveButtonType().eq(8).click()
@@ -260,12 +278,14 @@ Cypress.Commands.add('deleteBuzz', () => {
 
 })
 
+// Trying to submit a file without attachments 
 Cypress.Commands.add('uploadFileFail', () => {
     cy.get('.oxd-button-icon').click()
     cy.saveButton().eq(2).click()
 
 })
 
+// Uploading a file flow
 Cypress.Commands.add('uploadFile', () => {
     cy.get('input[type="file"]').selectFile('cypress/images/imatest.jpg', { force: true })
     cy.get('textarea[placeholder="Type comment here"]').type('Test image posted')
