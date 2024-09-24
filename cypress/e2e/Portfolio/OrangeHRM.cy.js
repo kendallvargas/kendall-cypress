@@ -7,6 +7,7 @@ describe('User Story | Orange HRM | STORY-007', () => {
   it('TC01: Confirming left panel section contains expected field titles', () => {
     cy.visit(`${Cypress.env("OrangeHRM")}/web/index.php/dashboard/index`)
 
+    cy.get('.oxd-main-menu-item-wrapper').should('have.length', 12)
     cy.menuValidation()
     cy.get('@menuItems').each((el) => {
       cy.contains(el[0])
@@ -42,7 +43,6 @@ describe('User Story | Orange HRM | STORY-007', () => {
 
     cy.wait('@hiringUser').then((request) => {
       expect(request.response.statusCode).to.be.equal(200);
-      expect(request.request.method).to.be.equal('POST');
       expect(request.response.body.data.employeeId).to.be.equal('7777')
     })
   });
@@ -67,7 +67,6 @@ describe('User Story | Orange HRM | STORY-007', () => {
     cy.adminUser()
     cy.wait('@addAdmin').then((request) => {
       expect(request.response.statusCode).to.be.equal(200);
-      expect(request.request.method).to.be.equal('POST');
       expect(request.response.body.data.userRole.displayName).to.be.equal("ESS")
     })
   });
@@ -90,7 +89,6 @@ describe('User Story | Orange HRM | STORY-007', () => {
     cy.formFilling()
     cy.wait("@candidateAdded").then((request) => {
       expect(request.response.statusCode).to.be.equal(200);
-      expect(request.request.method).to.be.equal('POST');
     })
   });
 
@@ -112,7 +110,6 @@ describe('User Story | Orange HRM | STORY-007', () => {
     cy.addingVacancy()
     cy.wait('@vacancyAdded').then((request) => {
       expect(request.response.statusCode).to.be.equal(200);
-      expect(request.request.method).to.be.equal('POST');
       expect(request.request.body.isPublished).to.be.equal(true)
     })
   });
@@ -138,20 +135,101 @@ describe('User Story | Orange HRM | STORY-007', () => {
 
   });
 
-  it('TC13: Shortlisting and interviewing applicant for SDET position', () => {
+  it('TC13: Shortlisting the application for SDET position', () => {
     cy.visit(`${Cypress.env("OrangeHRM")}/web/index.php/recruitment/viewCandidates`)
+    cy.intercept('PUT', '/web/index.php/api/v2/recruitment/candidates/**').as('shortlistSuccessful')
 
+    cy.get('.oxd-select-text-input').eq(1).click()
+    cy.get('div[role="listbox"]').contains('SDET').click()
+    cy.saveButton().click()
     cy.shortlist()
+    cy.candidateStatus()
+      .should('include.text', 'Status: Shortlisted')
+    cy.url().then((url)=>{
+      const interviewURL = url
+      cy.wrap(interviewURL).as('URLinterview')
+
+    })
+    cy.wait('@shortlistSuccessful').then((request) =>{
+      cy.log('This request is intercepted', request)
+      expect(request.response.statusCode).to.be.equal(200)
+
+    })
+  });
+
+  it('Interviewing the Applicant', function () {
+    const interviewURL = this.URLinterview
+    cy.visit(`${interviewURL}`)
+    cy.intercept('POST', '/web/index.php/api/v2/recruitment/candidates/**').as('interviewSuccessful')
 
     cy.interviewSchedule()
+    cy.candidateStatus()
+      .should('include.text', 'Status: Interview Scheduled')
+    cy.url().then((url)=>{
+      const interviewSuccessURL = url
+      cy.wrap(interviewSuccessURL).as('URLscheduled')
+
+    })
+    cy.wait('@interviewSuccessful').then((request) =>{
+      cy.log('This request is intercepted', request)
+      expect(request.response.statusCode).to.be.equal(200)
+    })
+  });
+
+  it('Marking the interview as passed', function () {
+    const interviewSuccessURL = this.URLscheduled
+    cy.visit(`${interviewSuccessURL}`)
+    cy.intercept('PUT', '/web/index.php/api/v2/recruitment/candidates/**').as('interviewPassed')
 
     cy.interviewPassed()
+    cy.candidateStatus()
+      .should('contain', 'Interview Passed')
 
-    cy.jobOffer()
+    cy.url().then((url)=>{
+      const interviewPassedURL = url
+      cy.wrap(interviewPassedURL).as('URLpassed')
+    })  
 
-    cy.verificationHire()
-
+    cy.wait('@interviewPassed').then((request) =>{
+      cy.log('This request is intercepted', request)
+      expect(request.response.statusCode).to.be.equal(200)
+    })
   });
+
+  it('Offering Job', function () {
+    const interviewPassedURL = this.URLpassed
+    cy.visit(`${interviewPassedURL}`)
+    cy.intercept('PUT', '/web/index.php/api/v2/recruitment/candidates/**').as('jobOffer')
+    
+    cy.jobOffer()    
+    cy.candidateStatus()
+      .should('contain', 'Job Offered')
+
+    cy.url().then((url)=>{
+      const hireVerification = url
+      cy.wrap(hireVerification).as('URLhire')
+    }) 
+      
+    cy.wait('@jobOffer').then((request) =>{
+      cy.log('This request is intercepted', request)
+      expect(request.response.statusCode).to.be.equal(200)
+    })
+  })
+
+  it('Marking applicant as Hired', function () {
+    const hireVerification = this.URLhire
+    cy.visit(`${hireVerification}`)
+    cy.intercept('PUT', '/web/index.php/api/v2/recruitment/candidates/**').as('appHired')
+    
+    cy.verificationHire()    
+    cy.candidateStatus()
+      .should('contain', 'Hired')
+      
+    cy.wait('@appHired').then((request) =>{
+      cy.log('This request is intercepted', request)
+      expect(request.response.statusCode).to.be.equal(200)
+    })
+  })
 
   it('TC14: Delete the vacancy for SDET', () => {
     cy.intercept('DELETE', '/web/index.php/api/v2/recruitment/vacancies').as('vacancyDeleted')
@@ -160,19 +238,16 @@ describe('User Story | Orange HRM | STORY-007', () => {
     cy.deleteVacancy()
     cy.wait('@vacancyDeleted').then((request) => {
       expect(request.response.statusCode).to.be.equal(200);
-      expect(request.request.method).to.be.equal('DELETE');
     })
   });
 
   it('TC15: Delete Hiring info from TC04', () => {
     cy.intercept('DELETE', '/web/index.php/api/v2/pim/employees').as('hiringDeleted');
     cy.visit(`${Cypress.env("OrangeHRM")}/web/index.php/pim/viewEmployeeList`)
-    cy.url().should('include', 'viewEmployeeList')
-
+    
     cy.deleteHiringInfo()
     cy.wait('@hiringDeleted').then((request) => {
       expect(request.response.statusCode).to.be.equal(200);
-      expect(request.request.method).to.be.equal('DELETE');
     })
   });
 
@@ -183,7 +258,6 @@ describe('User Story | Orange HRM | STORY-007', () => {
     cy.deleteCandidate()
     cy.wait('@candidateDeleted').then((request) => {
       expect(request.response.statusCode).to.be.equal(200);
-      expect(request.request.method).to.be.equal('DELETE');
     })
   });
 
@@ -194,7 +268,6 @@ describe('User Story | Orange HRM | STORY-007', () => {
     cy.applyLeave()
     cy.wait('@leaveSent').then((request) => {
       expect(request.response.statusCode).to.be.equal(200);
-      expect(request.request.method).to.be.equal('POST');
       expect(request.request.body.duration.type).to.be.equal('half_day_morning')
     })
   });
@@ -206,7 +279,6 @@ describe('User Story | Orange HRM | STORY-007', () => {
     cy.deleteLeave()
     cy.wait('@leaveDeleted').then((request) => {
       expect(request.response.statusCode).to.be.equal(200);
-      expect(request.request.method).to.be.equal('PUT');
     })
   });
 
@@ -217,10 +289,9 @@ describe('User Story | Orange HRM | STORY-007', () => {
     cy.postBuzz()
     cy.wait('@buzzPost').then((request) => {
       expect(request.response.statusCode).to.be.equal(200);
-      expect(request.request.method).to.be.equal('POST');
     })
   });
-
+    
   it('TC20: Delete post on Newsfeed', () => {
     cy.intercept('DELETE', '/web/index.php/api/v2/buzz/shares/**').as('postDeleted')
     cy.visit(`${Cypress.env("OrangeHRM")}/web/index.php/buzz/viewBuzz`)

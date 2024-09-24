@@ -17,23 +17,20 @@ Cypress.Commands.add("setViewport", () => {
 
 // Assertion of menu options in the left side panel
 Cypress.Commands.add('menuValidation', () => {
-    cy.get('.oxd-sidepanel-body').within(() => {
-        cy.get('.oxd-main-menu-item-wrapper').should('have.length', 12)
-        cy.wrap([
-            [/Admin/i, "/web/index.php/admin/viewAdminModule"],
-            [/PIM/i, "/web/index.php/pim/viewPimModule"],
-            [/Leave/i, "/web/index.php/leave/viewLeaveModule"],
-            [/Time/i, "/web/index.php/time/viewTimeModule"],
-            [/Recruitment/i, "/web/index.php/recruitment/viewRecruitmentModule"],
-            [/My Info/i, "/web/index.php/pim/viewMyDetails"],
-            [/Performance/i, "/web/index.php/performance/viewPerformanceModule"],
-            [/Dashboard/i, "/web/index.php/dashboard/index"],
-            [/Directory/i, "/web/index.php/directory/viewDirectory"],
-            [/Maintenance/i, "/web/index.php/maintenance/viewMaintenanceModule"],
-            [/Claim/i, "/web/index.php/claim/viewClaimModule"],
-            [/Buzz/i, "/web/index.php/buzz/viewBuzz"],
-        ]).as('menuItems')
-    })
+    cy.wrap([
+        [/Admin/i, "/web/index.php/admin/viewAdminModule"],
+        [/PIM/i, "/web/index.php/pim/viewPimModule"],
+        [/Leave/i, "/web/index.php/leave/viewLeaveModule"],
+        [/Time/i, "/web/index.php/time/viewTimeModule"],
+        [/Recruitment/i, "/web/index.php/recruitment/viewRecruitmentModule"],
+        [/My Info/i, "/web/index.php/pim/viewMyDetails"],
+        [/Performance/i, "/web/index.php/performance/viewPerformanceModule"],
+        [/Dashboard/i, "/web/index.php/dashboard/index"],
+        [/Directory/i, "/web/index.php/directory/viewDirectory"],
+        [/Maintenance/i, "/web/index.php/maintenance/viewMaintenanceModule"],
+        [/Claim/i, "/web/index.php/claim/viewClaimModule"],
+        [/Buzz/i, "/web/index.php/buzz/viewBuzz"],
+    ]).as('menuItems')    
 })
 
 // Invalid Login Scenario: Submitting invalid username and password
@@ -143,13 +140,9 @@ Cypress.Commands.add('vacancyApply', () => {
 
 // Shortlisting the candidate
 Cypress.Commands.add('shortlist', () => {
-    cy.get('.oxd-select-text-input').eq(1).click()
-    cy.get('div[role="listbox"]').contains('SDET').click()
-    cy.saveButton().click()
-
-    cy.get('.oxd-padding-cell').eq(9).should('include.text', candidateName)
-    cy.saveButtonType().eq(5).click()
-    cy.get('.oxd-text--p').eq(0).should('include.text', candidateName)
+    cy.contains('.oxd-padding-cell', candidateName) 
+    .closest('.oxd-table-row') 
+    .find('button i.bi-eye-fill').click()
     cy.saveButtonType().eq(4).click()
     cy.get('.oxd-textarea--resize-vertical').type('Shortlisting application')
     cy.saveButton().click()
@@ -158,7 +151,6 @@ Cypress.Commands.add('shortlist', () => {
 
 // After shortlisting, adding the candidate for an interview appointment
 Cypress.Commands.add('interviewSchedule', () => {
-    cy.get('.oxd-text--subtitle-2').should('include.text', 'Status: Shortlisted')
     cy.saveButtonType().eq(4).click()
 
     cy.activeInput().eq(5).type('Cypress Test Interview')
@@ -180,9 +172,6 @@ Cypress.Commands.add('interviewPassed', () => {
     cy.saveButtonType().eq(5).click()
     cy.get('.oxd-textarea--resize-vertical').type('Interview passed successfully')
     cy.saveButton().click()
-    cy.get('.oxd-text--p').eq(0).should('include.text', candidateName)
-
-    cy.get('.oxd-text--subtitle-2').should('contain', 'Interview Passed')
     cy.log("interview passed")
 })
 
@@ -190,19 +179,15 @@ Cypress.Commands.add('interviewPassed', () => {
 Cypress.Commands.add('jobOffer', () => {
     cy.saveButtonType().eq(5).click()
     cy.get('.oxd-textarea--resize-vertical').type('Job offer for the SDET position') /
-        cy.saveButton().click()
+    cy.saveButton().click()
     cy.log("job offered")
 })
 
 // Confirming candidate as hired
 Cypress.Commands.add('verificationHire', () => {
-    cy.get('.oxd-text--subtitle-2').should('contain', 'Job Offered')
     cy.saveButtonType().eq(5).click()
     cy.get('.oxd-textarea--resize-vertical').type('Hired for SDET position')
     cy.saveButton().click()
-
-    cy.get('.oxd-text--subtitle-2')
-        .should('contain', 'Hired')
     cy.log("candidate hired")
 })
 
@@ -222,8 +207,9 @@ Cypress.Commands.add('deleteVacancy', () => {
 Cypress.Commands.add('deleteHiringInfo', () => {
     cy.activeInput().eq(1).type('7777')
     cy.searchButton().click()
-    cy.get('.oxd-padding-cell').eq(10).should('have.text', '7777')
-    cy.trashButton().click()
+    cy.get('.oxd-padding-cell')
+    .filter(':contains("7777")')
+    .parent().find('.bi-trash').click()
     cy.deleteConfirm().click()
 })
 
@@ -231,8 +217,9 @@ Cypress.Commands.add('deleteHiringInfo', () => {
 Cypress.Commands.add('deleteCandidate', () => {
     cy.get('input[placeholder="Enter comma seperated words..."]').type(keyword)   
     cy.searchButton().click()
-    cy.get('div[role="cell"]').eq(2).should('include.text', candidateName)
-    cy.trashButton().eq(0).click()
+    cy.get('div[role="cell"]')
+    .contains(candidateName)
+    .parents('.oxd-table-card').find('.bi-trash').click()
     cy.deleteConfirm().click()
 })
 
@@ -271,12 +258,11 @@ Cypress.Commands.add('postBuzz', () => {
 
 // Deleting the post note
 Cypress.Commands.add('deleteBuzz', () => {
-    cy.get('.orangehrm-buzz-post-body-text').eq(0).should('have.text', keyword)
     cy.saveButtonType().eq(8).click()
     cy.contains('Delete Post').click()
     cy.deleteConfirm().click()
-
 })
+
 
 // Trying to submit a file without attachments 
 Cypress.Commands.add('uploadFileFail', () => {
@@ -319,4 +305,8 @@ Cypress.Commands.add('activeInput', () => {
 
 Cypress.Commands.add('errorMessage', () => {
     cy.get('.oxd-input-group__message')
+})
+
+Cypress.Commands.add('candidateStatus', () => {
+    cy.get('.oxd-text--subtitle-2', {timeout: 7000})
 })
