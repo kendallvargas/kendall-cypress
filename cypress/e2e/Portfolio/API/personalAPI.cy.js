@@ -1,6 +1,6 @@
 import { faker } from '@faker-js/faker';
 
-describe("Suite API", () => {
+describe("Suite API", { tags: ['smoke', 'api']}, () => {
     const user = faker.internet.userName()
     const RandExp = require('randexp');
     const passwordRegex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/

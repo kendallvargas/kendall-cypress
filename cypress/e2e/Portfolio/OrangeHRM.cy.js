@@ -1,10 +1,10 @@
-describe('User Story | Orange HRM | STORY-007', () => {
-  beforeEach('Precondition: Admin must have login set up', () => {
+describe('OrangeHRM Test Suite', { tags: ['smoke', 'e2e']}, () => {
+  beforeEach('Randomizing viewport and signing in before each it', () => {
     cy.setViewport();
     cy.loginOrange()
   })
 
-  it('TC01: Confirming left panel section contains expected field titles', () => {
+  it('Confirming left panel section contains expected field titles', { tags : 'positive' }, () => {
     cy.visit(`${Cypress.env("OrangeHRM")}/web/index.php/dashboard/index`)
 
     cy.get('.oxd-main-menu-item-wrapper').should('have.length', 12)
@@ -16,16 +16,17 @@ describe('User Story | Orange HRM | STORY-007', () => {
     })
   });
 
-  it('TC02: Invalid Login Test', () => {
+  it('Invalid Login Test', { tags : 'negative' }, () => {
     cy.clearCookies(); 
+    cy.visit('https://opensource-demo.orangehrmlive.com/web/index.php/auth/login')
     cy.invalidLogin()
     cy.get('.oxd-alert-content-text')
       .should('have.text', 'Invalid credentials')
   });
 
 
-  it('TC03: Invalid Hiring Information Section', () => {
-    cy.visit(`${Cypress.env("OrangeHRM")}/web/index.php/pim/addEmployee`)
+  it('Invalid Hiring Information Section', { tags : 'negative' }, () => {
+    cy.visit(`${Cypress.env("AddEmployee")}`)
 
     cy.hiringEmployeeNegative()
     cy.errorMessage().each((error) => {
@@ -34,9 +35,9 @@ describe('User Story | Orange HRM | STORY-007', () => {
     })
   });
 
-  it('TC04: Creating Hiring information', () => {
+  it('Creating Hiring information', { tags : 'positive' }, () => {
     cy.intercept('POST', '/web/index.php/api/v2/pim/employees').as('hiringUser');
-    cy.visit(`${Cypress.env("OrangeHRM")}/web/index.php/pim/addEmployee`)
+    cy.visit(`${Cypress.env("AddEmployee")}`)
 
     cy.hiringEmployee()
     cy.saveButton().click()
@@ -47,21 +48,24 @@ describe('User Story | Orange HRM | STORY-007', () => {
     })
   });
 
-  it('TC05: Invalid adding user to admin panel', () => {
-    cy.visit(`${Cypress.env("OrangeHRM")}/web/index.php/admin/saveSystemUser`)
+  it('Invalid adding user to admin panel: Required errors', { tags : 'negative' }, () => {
+    cy.visit(`${Cypress.env("SaveSystemUser")}`)
 
     cy.saveButton().click()
-    cy.errorMessage().each(($el, index) => {
-      if (index < 5) {
-        cy.wrap($el).should('have.text', 'Required');
-      } else if (index === 5) {
-        cy.wrap($el).should('have.text', 'Passwords do not match');
-      }
-    })
+    cy.errorMessage().filter(':contains("Required")')
+      .should('have.length', 5);
   });
 
-  it('TC06: Add a System User to the admin panel', () => {
-    cy.visit(`${Cypress.env("OrangeHRM")}/web/index.php/admin/saveSystemUser`)
+  it('Invalid adding user to admin panel: Password error', { tags : 'negative' }, () => {
+    cy.visit(`${Cypress.env("SaveSystemUser")}`)
+
+    cy.saveButton().click()
+    cy.errorMessage().filter(':contains("Passwords do not match")')
+      .should('have.length', 1);
+  });
+
+  it('Add a System User to the admin panel', { tags : 'positive' }, () => {
+    cy.visit(`${Cypress.env("SaveSystemUser")}`)
     cy.intercept('POST', '/web/index.php/api/v2/admin/users').as('addAdmin');
 
     cy.adminUser()
@@ -72,8 +76,8 @@ describe('User Story | Orange HRM | STORY-007', () => {
   });
 
 
-  it('TC07: Invalid candidate information', () => {
-    cy.visit(`${Cypress.env("OrangeHRM")}/web/index.php/recruitment/addCandidate`)
+  it('Invalid candidate information', { tags : 'negative' }, () => {
+    cy.visit(`${Cypress.env("AddCandidate")}`)
 
     cy.saveButton().click()
     cy.errorMessage().should('have.length', 3)
@@ -82,9 +86,9 @@ describe('User Story | Orange HRM | STORY-007', () => {
     })
   });
 
-  it('TC08: Adding candidate information', () => {
+  it('Adding candidate information', { tags : 'positive' }, () => {
     cy.intercept('POST', '/web/index.php/api/v2/recruitment/candidates').as('candidateAdded');
-    cy.visit(`${Cypress.env("OrangeHRM")}/web/index.php/recruitment/addCandidate`)
+    cy.visit(`${Cypress.env("AddCandidate")}`)
 
     cy.formFilling()
     cy.wait("@candidateAdded").then((request) => {
@@ -93,8 +97,8 @@ describe('User Story | Orange HRM | STORY-007', () => {
   });
 
 
-  it('TC09: Invalid vacancy for SDET', () => {
-    cy.visit(`${Cypress.env("OrangeHRM")}/web/index.php/recruitment/addJobVacancy`)
+  it('Invalid vacancy for SDET', { tags : 'negative' }, () => {
+    cy.visit(`${Cypress.env("JobVacancy")}`)
 
     cy.saveButton().click()
     cy.errorMessage().should('have.length', 3)
@@ -103,9 +107,9 @@ describe('User Story | Orange HRM | STORY-007', () => {
     })
   });
 
-  it('TC10: Adding a vacancy for SDET', () => {
+  it('Adding a vacancy for SDET', { tags : 'positive' }, () => {
     cy.intercept('POST', '/web/index.php/api/v2/recruitment/vacancies').as('vacancyAdded')
-    cy.visit(`${Cypress.env("OrangeHRM")}/web/index.php/recruitment/addJobVacancy`)
+    cy.visit(`${Cypress.env("JobVacancy")}`)
 
     cy.addingVacancy()
     cy.wait('@vacancyAdded').then((request) => {
@@ -114,8 +118,8 @@ describe('User Story | Orange HRM | STORY-007', () => {
     })
   });
 
-  it('TC11: Invalid application', () => {
-    cy.visit(`${Cypress.env("OrangeHRM")}/web/index.php/recruitmentApply/jobs.html`)
+  it('Invalid application', { tags : 'negative' }, () => {
+    cy.visit(`${Cypress.env("CheckJobPosition")}`)
 
     cy.vacancyApplyFail()
     cy.errorMessage().should('have.length', 4)
@@ -124,8 +128,8 @@ describe('User Story | Orange HRM | STORY-007', () => {
     })
   });
 
-  it('TC12: Checking SDET position and applying', () => {
-    cy.visit(`${Cypress.env("OrangeHRM")}/web/index.php/recruitmentApply/jobs.html`)
+  it('Checking SDET position and applying', { tags : 'positive' }, () => {
+    cy.visit(`${Cypress.env("CheckJobPosition")}`)
     cy.intercept('POST', '/web/index.php/recruitment/public/applicants').as('applicationSent')
 
     cy.vacancyApply()    
@@ -135,8 +139,8 @@ describe('User Story | Orange HRM | STORY-007', () => {
 
   });
 
-  it('TC13: Shortlisting the application for SDET position', () => {
-    cy.visit(`${Cypress.env("OrangeHRM")}/web/index.php/recruitment/viewCandidates`)
+  it('Shortlisting the application for SDET position', { tags : 'positive' }, () => {
+    cy.visit(`${Cypress.env("CandidatePage")}`)
     cy.intercept('PUT', '/web/index.php/api/v2/recruitment/candidates/**').as('shortlistSuccessful')
 
     cy.get('.oxd-select-text-input').eq(1).click()
@@ -157,7 +161,7 @@ describe('User Story | Orange HRM | STORY-007', () => {
     })
   });
 
-  it('Interviewing the Applicant', function () {
+  it('Interviewing the Applicant', { tags : 'positive' }, function () {
     const interviewURL = this.URLinterview
     cy.visit(`${interviewURL}`)
     cy.intercept('POST', '/web/index.php/api/v2/recruitment/candidates/**').as('interviewSuccessful')
@@ -176,7 +180,7 @@ describe('User Story | Orange HRM | STORY-007', () => {
     })
   });
 
-  it('Marking the interview as passed', function () {
+  it('Marking the interview as passed', { tags : 'positive' }, function () {
     const interviewSuccessURL = this.URLscheduled
     cy.visit(`${interviewSuccessURL}`)
     cy.intercept('PUT', '/web/index.php/api/v2/recruitment/candidates/**').as('interviewPassed')
@@ -196,7 +200,7 @@ describe('User Story | Orange HRM | STORY-007', () => {
     })
   });
 
-  it('Offering Job', function () {
+  it('Offering Job', { tags : 'positive' }, function () {
     const interviewPassedURL = this.URLpassed
     cy.visit(`${interviewPassedURL}`)
     cy.intercept('PUT', '/web/index.php/api/v2/recruitment/candidates/**').as('jobOffer')
@@ -216,7 +220,7 @@ describe('User Story | Orange HRM | STORY-007', () => {
     })
   })
 
-  it('Marking applicant as Hired', function () {
+  it('Marking applicant as Hired', { tags : 'positive' }, function () {
     const hireVerification = this.URLhire
     cy.visit(`${hireVerification}`)
     cy.intercept('PUT', '/web/index.php/api/v2/recruitment/candidates/**').as('appHired')
@@ -231,7 +235,7 @@ describe('User Story | Orange HRM | STORY-007', () => {
     })
   })
 
-  it('TC14: Delete the vacancy for SDET', () => {
+  it('Delete the vacancy for SDET', { tags : 'delete' }, () => {
     cy.intercept('DELETE', '/web/index.php/api/v2/recruitment/vacancies').as('vacancyDeleted')
     cy.visit(`${Cypress.env("OrangeHRM")}/web/index.php/recruitment/viewJobVacancy`)
 
@@ -241,7 +245,7 @@ describe('User Story | Orange HRM | STORY-007', () => {
     })
   });
 
-  it('TC15: Delete Hiring info from TC04', () => {
+  it('Delete Hiring info from TC04', { tags : 'delete' }, () => {
     cy.intercept('DELETE', '/web/index.php/api/v2/pim/employees').as('hiringDeleted');
     cy.visit(`${Cypress.env("OrangeHRM")}/web/index.php/pim/viewEmployeeList`)
     
@@ -251,9 +255,9 @@ describe('User Story | Orange HRM | STORY-007', () => {
     })
   });
 
-  it('TC16: Delete Candidate info from TC06', () => {
+  it('Delete Candidate info from @addAdmin', { tags : 'delete' }, () => {
     cy.intercept('DELETE', '/web/index.php/api/v2/recruitment/candidates').as('candidateDeleted');
-    cy.visit(`${Cypress.env("OrangeHRM")}/web/index.php/recruitment/viewCandidates`)
+    cy.visit(`${Cypress.env("CandidatePage")}`)
 
     cy.deleteCandidate()
     cy.wait('@candidateDeleted').then((request) => {
@@ -261,7 +265,7 @@ describe('User Story | Orange HRM | STORY-007', () => {
     })
   });
 
-  it('TC17: Applying for a leave', () => {
+  it('Applying for a leave', { tags : 'positive' }, () => {
     cy.intercept('POST', '/web/index.php/api/v2/leave/leave-requests').as('leaveSent')
     cy.visit(`${Cypress.env("OrangeHRM")}/web/index.php/leave/applyLeave`)
 
@@ -272,7 +276,7 @@ describe('User Story | Orange HRM | STORY-007', () => {
     })
   });
 
-  it('TC18: Delete Leave apply', () => {
+  it('Delete Leave apply', { tags : 'delete' }, () => {
     cy.intercept('PUT', '/web/index.php/api/v2/leave/employees/leave-requests/**').as('leaveDeleted')
     cy.visit(`${Cypress.env("OrangeHRM")}/web/index.php/leave/viewMyLeaveList`)
 
@@ -282,9 +286,9 @@ describe('User Story | Orange HRM | STORY-007', () => {
     })
   });
 
-  it('TC19: Upload a post to the Newsfeed', () => {
+  it('Upload a post to the Newsfeed', { tags : 'positive' }, () => {
     cy.intercept('POST', '/web/index.php/api/v2/buzz/posts').as('buzzPost')
-    cy.visit(`${Cypress.env("OrangeHRM")}/web/index.php/buzz/viewBuzz`)
+    cy.visit(`${Cypress.env("PostPage")}`)
 
     cy.postBuzz()
     cy.wait('@buzzPost').then((request) => {
@@ -292,9 +296,9 @@ describe('User Story | Orange HRM | STORY-007', () => {
     })
   });
     
-  it('TC20: Delete post on Newsfeed', () => {
+  it('Delete post on Newsfeed', { tags : 'delete' }, () => {
     cy.intercept('DELETE', '/web/index.php/api/v2/buzz/shares/**').as('postDeleted')
-    cy.visit(`${Cypress.env("OrangeHRM")}/web/index.php/buzz/viewBuzz`)
+    cy.visit(`${Cypress.env("PostPage")}`)
 
     cy.deleteBuzz()
     cy.wait('@postDeleted').then((request) => {
@@ -302,12 +306,16 @@ describe('User Story | Orange HRM | STORY-007', () => {
     })
   });
 
-  it('TC21: Upload a file and validate its result', () => {
-    cy.intercept('POST', '/web/index.php/api/v2/pim/employees/7/screen/personal/attachments').as('attachmentPosted')
-    cy.visit(`${Cypress.env("OrangeHRM")}/web/index.php/pim/viewPersonalDetails/empNumber/7`)
+  it('Fail to add a file', { tags : 'negative' }, () => {
+    cy.visit(`${Cypress.env("ownerPage")}`)
 
     cy.uploadFileFail()
     cy.errorMessage().should('have.text', 'Required')
+  })
+
+  it('Upload a file and validate its result', { tags : 'positive' }, () => {
+    cy.intercept('POST', '/web/index.php/api/v2/pim/employees/7/screen/personal/attachments').as('attachmentPosted')
+    cy.visit(`${Cypress.env("ownerPage")}`)
 
     cy.uploadFile()
     cy.get('.orangehrm-container', { timeout: 10000 }).contains('Test image posted').should('be.visible')

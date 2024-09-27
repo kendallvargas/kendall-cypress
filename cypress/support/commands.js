@@ -2,7 +2,7 @@ import { faker } from '@faker-js/faker'
 import { randomizeViewport } from "./helper";
 
 const hireName = faker.person.fullName()
-const candidateName = faker.person.fullName();
+const candidateName = faker.person.fullName({firstName: 'Trezeguet'});
 const text = faker.lorem.sentence()
 const keyword = faker.food.vegetable()
 
@@ -35,7 +35,6 @@ Cypress.Commands.add('menuValidation', () => {
 
 // Invalid Login Scenario: Submitting invalid username and password
 Cypress.Commands.add('invalidLogin', () => {
-    cy.visit('https://opensource-demo.orangehrmlive.com/web/index.php/auth/login')
     cy.get('input[name="username"]').type('3434')
     cy.get('input[name="password"]').type('3434')
     cy.saveButton().click()
@@ -99,7 +98,7 @@ Cypress.Commands.add('formFilling', () => {
     cy.get('input[placeholder="Type here"]').eq(1).type('+506 88888888')
     cy.get('input[type="file"]').selectFile('cypress/images/test.pdf', { force: true })
     cy.get('input[placeholder="Enter comma seperated words..."]').type(keyword)
-    cy.get('.oxd-textarea--resize-vertical').type('Nothing to add here')
+    cy.notesField().type('Nothing to add here')
     cy.get('.oxd-checkbox-input-icon').click({ force: true })
     cy.saveButton().click()
 })
@@ -144,7 +143,7 @@ Cypress.Commands.add('shortlist', () => {
     .closest('.oxd-table-row') 
     .find('button i.bi-eye-fill').click()
     cy.saveButtonType().eq(4).click()
-    cy.get('.oxd-textarea--resize-vertical').type('Shortlisting application')
+    cy.notesField().type('Shortlisting application')
     cy.saveButton().click()
     cy.log("shortlisting saved")
 })
@@ -162,7 +161,7 @@ Cypress.Commands.add('interviewSchedule', () => {
     cy.get('.bi-chevron-right').click()
     cy.get('.oxd-calendar-dates-grid').contains('1').click()
     cy.get('.oxd-time-input--clock').click()
-    cy.get('.oxd-textarea--resize-vertical').type('Interview appointment for SDET')
+    cy.notesField().type('Interview appointment for SDET')
     cy.saveButton().click()
     cy.log("interview scheduled")
 })
@@ -170,7 +169,7 @@ Cypress.Commands.add('interviewSchedule', () => {
 // Flow to accept the candidate after passing the interview
 Cypress.Commands.add('interviewPassed', () => {
     cy.saveButtonType().eq(5).click()
-    cy.get('.oxd-textarea--resize-vertical').type('Interview passed successfully')
+    cy.notesField().type('Interview passed successfully')
     cy.saveButton().click()
     cy.log("interview passed")
 })
@@ -178,7 +177,7 @@ Cypress.Commands.add('interviewPassed', () => {
 // Offering a job
 Cypress.Commands.add('jobOffer', () => {
     cy.saveButtonType().eq(5).click()
-    cy.get('.oxd-textarea--resize-vertical').type('Job offer for the SDET position') /
+    cy.notesField().type('Job offer for the SDET position') /
     cy.saveButton().click()
     cy.log("job offered")
 })
@@ -186,7 +185,7 @@ Cypress.Commands.add('jobOffer', () => {
 // Confirming candidate as hired
 Cypress.Commands.add('verificationHire', () => {
     cy.saveButtonType().eq(5).click()
-    cy.get('.oxd-textarea--resize-vertical').type('Hired for SDET position')
+    cy.notesField().type('Hired for SDET position')
     cy.saveButton().click()
     cy.log("candidate hired")
 })
@@ -218,7 +217,7 @@ Cypress.Commands.add('deleteCandidate', () => {
     cy.get('input[placeholder="Enter comma seperated words..."]').type(keyword)   
     cy.searchButton().click()
     cy.get('div[role="cell"]')
-    .contains(candidateName)
+    .contains('Trezeguet')
     .parents('.oxd-table-card').find('.bi-trash').click()
     cy.deleteConfirm().click()
 })
@@ -273,6 +272,7 @@ Cypress.Commands.add('uploadFileFail', () => {
 
 // Uploading a file flow
 Cypress.Commands.add('uploadFile', () => {
+    cy.get('.oxd-button-icon').click()
     cy.get('input[type="file"]').selectFile('cypress/images/imatest.jpg', { force: true })
     cy.get('textarea[placeholder="Type comment here"]').type('Test image posted')
     cy.saveButton().eq(2).click()
@@ -309,4 +309,8 @@ Cypress.Commands.add('errorMessage', () => {
 
 Cypress.Commands.add('candidateStatus', () => {
     cy.get('.oxd-text--subtitle-2', {timeout: 7000})
+})
+
+Cypress.Commands.add('notesField', () => {
+    cy.get('.oxd-textarea--resize-vertical')
 })

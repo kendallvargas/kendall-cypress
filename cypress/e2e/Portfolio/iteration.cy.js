@@ -1,4 +1,4 @@
-describe('Iteration practice Cypress website', () => {
+describe('Iteration practice Cypress website', { tags: ['smoke', 'iteration']}, () => {
 
   beforeEach(()=>{
     cy.setViewport();
