@@ -36,7 +36,7 @@ Run the UI regression test with Chrome browser:
 ```bash
 npm run ui-regression
 ```
-Run the API regression test with Chrome browser:
+Run the API regression test with Electron browser:
 ```bash
 npm run API-regression
 ```
@@ -46,7 +46,7 @@ npm run iteration-regression
 ```
 Run all suites at once:
 ```bash
-npm run ui-regression && npm run API-regression && npm run iteration-regression
+npm run e2e-regression
 ```
 
 ### **Sites used:**
