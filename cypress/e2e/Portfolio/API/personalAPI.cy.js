@@ -1,11 +1,13 @@
 import { faker } from '@faker-js/faker';
 
-describe("Suite API", { tags: ['smoke', 'api']}, () => {
-    const user = faker.internet.userName()
-    const RandExp = require('randexp');
-    const passwordRegex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/
-    const randomPassword = new RandExp(passwordRegex).gen()
+const user = faker.internet.userName()
+const job = faker.person.jobTitle()
+const keyword = faker.food.vegetable()
+const RandExp = require('randexp');
+const passwordRegex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/
+const randomPassword = new RandExp(passwordRegex).gen()
 
+describe("Suite API for Bookstore", { tags: ['smoke', 'api']}, () => {
 
     it('Bookstore section', () => {
         cy.request({
@@ -47,8 +49,6 @@ describe("Suite API", { tags: ['smoke', 'api']}, () => {
             },
         }).then((response) => {
             expect(response.body.username).to.be.equal(user)
-            const userID = response.body.userID
-            cy.wrap(userID).as('IDuser')
         })
     })
 
@@ -63,32 +63,10 @@ describe("Suite API", { tags: ['smoke', 'api']}, () => {
                 password: randomPassword,
             },
         }).then((response) => {
-            const tokenID = response.body.token
-            cy.wrap(tokenID).as('testToken')
-            cy.log(tokenID)
+            expect(response.status).to.be.eq(200)
+            expect(response.body.token).to.exist
         })
     })
-
-    it('Retrieving the data from the login using token', function () {
-        const tokenID = this.testToken
-        const userID = this.IDuser
-        const authorization = `Bearer ${tokenID}`
-        const request = {
-            method: 'GET',
-            url: `${Cypress.env("demoqa")}/account/v1/User/${userID}`,
-            headers: {
-                authorization,
-            },
-        }
-        cy.request(request).then((response) => {
-            cy.log('Validating status').then(() => {
-                expect(response.status).to.be.equal(200)
-            })
-            cy.log('Validating expected username').then(() => {
-                expect(response.body.username).to.be.equal(user)
-            })
-        })
-    });
 
     it('Invalid API', () => {
         cy.request({
@@ -99,4 +77,95 @@ describe("Suite API", { tags: ['smoke', 'api']}, () => {
             expect(response.status).not.be.eq(200)
         })
     });
+})
+
+describe("Suite API for general login Flow", { tags: ['smoke', 'api'] }, () => {
+
+    it('Searching for non-existing user', () => {
+
+        cy.request({
+            method: 'GET',
+            url: `${Cypress.env("reqres")}/api/users/7442`,
+            failOnStatusCode: false
+        }).then((response) => {
+            expect(response.status).to.be.eq(404)
+        })
+    })
+
+    it('Creating a new user', () => {
+        cy.request({
+            method: 'POST',
+            url: `${Cypress.env("reqres")}/api/users`,
+            body: {
+                name: user,
+                job: job,
+                id: 15
+            }
+        }).then((response) => {
+            expect(response.status).to.be.eq(201)
+        })
+    })
+
+    it('Successful Login', () => {
+
+        cy.request({
+            method: 'POST',
+            url: `${Cypress.env("reqres")}/api/login`,
+            body: {
+                email: "eve.holt@reqres.in",
+                password: "cityslicka"
+            }
+        }).then((response) => {
+            expect(response.status).to.be.eq(200)
+            expect(response.body.token).to.exist
+        })
+    })
+
+    it('Unsuccessful Login with incorrect email and password', () => {
+
+        cy.request({
+            method: 'POST',
+            url: `${Cypress.env("reqres")}/api/login`,
+            body: {
+                email: "kendall@test",
+                password: "1234abcd"
+            },
+            failOnStatusCode: false
+        }).then((response) => {
+            expect(response.status).to.be.eq(400)
+            expect(response.body.error).to.be.eq('user not found')
+        })
+    })
+
+    it('Unsuccessful Login with incorrect password', () => {
+
+        cy.request({
+            method: 'POST',
+            url: `${Cypress.env("reqres")}/api/login`,
+            body: {
+                email: "eve.holt@reqres.in",
+                password: ""
+            },
+            failOnStatusCode: false
+        }).then((response) => {
+            expect(response.status).to.be.eq(400)
+            expect(response.body.error).to.be.eq('Missing password')
+        })
+    })
+
+    it('Unsuccessful Login with empty email and password', () => {
+
+        cy.request({
+            method: 'POST',
+            url: `${Cypress.env("reqres")}/api/login`,
+            body: {
+                email: "",
+                password: ""
+            },
+            failOnStatusCode: false
+        }).then((response) => {
+            expect(response.status).to.be.eq(400)
+            expect(response.body.error).to.be.eq('Missing email or username')
+        })
+    })
 })

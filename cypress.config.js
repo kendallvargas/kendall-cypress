@@ -22,6 +22,7 @@ module.exports = defineConfig({
       ownerPage: "https://opensource-demo.orangehrmlive.com/web/index.php/pim/viewPersonalDetails/empNumber/7",
 
       demoqa: "https://demoqa.com",
+      reqres : "https://reqres.in",
       cypressweb: "https://docs.cypress.io",
     },
   
