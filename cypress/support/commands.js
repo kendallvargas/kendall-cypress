@@ -229,10 +229,10 @@ Cypress.Commands.add('applyLeave', () => {
 
     cy.get('.oxd-date-input-icon').eq(0).click()
     cy.get('.bi-chevron-right').click()
-    cy.get('.oxd-calendar-dates-grid').contains('11').click()
+    cy.get('.oxd-calendar-dates-grid').contains('13').click()
 
     cy.get('.oxd-date-input-icon').eq(1).click()
-    cy.get('.oxd-calendar-dates-grid').eq(1).contains('11').click()
+    cy.get('.oxd-calendar-dates-grid').eq(1).contains('13').click()
 
     cy.get('.oxd-select-text--after').eq(1).click()
     cy.contains('Half Day - Morning').click()
