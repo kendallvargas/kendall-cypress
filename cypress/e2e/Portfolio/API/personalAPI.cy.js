@@ -121,7 +121,7 @@ describe("Happy path for general login Flow", { tags: ['smoke', 'api'] }, () => 
 
 })
 
-describe.only("Negative path API general login validation", { tags: ['smoke', 'api'] }, () => {
+describe("Negative path API general login validation", { tags: ['smoke', 'api'] }, () => {
     for (let { nameUseCase, requestBody, responseBody } of useCases) {
 
         it(`Use Case: ${nameUseCase}`, () => {
