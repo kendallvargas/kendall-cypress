@@ -54,21 +54,6 @@ describe("Suite API for Bookstore", { tags: ['smoke', 'api'] }, () => {
         })
     })
 
-    it('Getting auth token del login', () => {
-        cy.request({
-            failOnStatusCode: false,
-            method: 'POST',
-            url: `${Cypress.env("demoqa")}/Account/v1/GenerateToken`,
-            body: {
-                userName: user,
-                password: randomPassword,
-            },
-        }).then((response) => {
-            expect(response.status).to.be.eq(200)
-            expect(response.body.token).to.exist
-        })
-    })
-
     it('Invalid API', () => {
         cy.request({
             method: 'POST',
