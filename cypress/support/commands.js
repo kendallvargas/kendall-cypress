@@ -251,6 +251,7 @@ Cypress.Commands.add('deleteLeave', () => {
 
 // Posting a note in the feed section
 Cypress.Commands.add('postBuzz', () => {
+    cy.wait(2000)
     cy.get('.oxd-buzz-post-input').type(keyword)
     cy.saveButton().click()
 })
