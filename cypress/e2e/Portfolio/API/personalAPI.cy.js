@@ -1,4 +1,6 @@
 import { faker } from '@faker-js/faker';
+import useCases from '../API/apiValidationUseCases.json';
+
 
 const user = faker.internet.userName()
 const job = faker.person.jobTitle()
@@ -7,7 +9,7 @@ const RandExp = require('randexp');
 const passwordRegex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/
 const randomPassword = new RandExp(passwordRegex).gen()
 
-describe("Suite API for Bookstore", { tags: ['smoke', 'api']}, () => {
+describe("Suite API for Bookstore", { tags: ['smoke', 'api'] }, () => {
 
     it('Bookstore section', () => {
         cy.request({
@@ -53,7 +55,6 @@ describe("Suite API for Bookstore", { tags: ['smoke', 'api']}, () => {
     })
 
     it('Getting auth token del login', () => {
-        
         cy.request({
             failOnStatusCode: false,
             method: 'POST',
@@ -76,22 +77,10 @@ describe("Suite API for Bookstore", { tags: ['smoke', 'api']}, () => {
         }).then((response) => {
             expect(response.status).not.be.eq(200)
         })
-    });
+    })
 })
 
-describe("Suite API for general login Flow", { tags: ['smoke', 'api'] }, () => {
-
-    it('Searching for non-existing user', () => {
-
-        cy.request({
-            method: 'GET',
-            url: `${Cypress.env("reqres")}/api/users/7442`,
-            failOnStatusCode: false
-        }).then((response) => {
-            expect(response.status).to.be.eq(404)
-        })
-    })
-
+describe("Happy path for general login Flow", { tags: ['smoke', 'api'] }, () => {
     it('Creating a new user', () => {
         cy.request({
             method: 'POST',
@@ -107,7 +96,6 @@ describe("Suite API for general login Flow", { tags: ['smoke', 'api'] }, () => {
     })
 
     it('Successful Login', () => {
-
         cy.request({
             method: 'POST',
             url: `${Cypress.env("reqres")}/api/login`,
@@ -121,51 +109,31 @@ describe("Suite API for general login Flow", { tags: ['smoke', 'api'] }, () => {
         })
     })
 
-    it('Unsuccessful Login with incorrect email and password', () => {
-
+    it('Searching for non-existing user', () => {
         cy.request({
-            method: 'POST',
-            url: `${Cypress.env("reqres")}/api/login`,
-            body: {
-                email: "kendall@test",
-                password: "1234abcd"
-            },
+            method: 'GET',
+            url: `${Cypress.env("reqres")}/api/users/7442`,
             failOnStatusCode: false
         }).then((response) => {
-            expect(response.status).to.be.eq(400)
-            expect(response.body.error).to.be.eq('user not found')
+            expect(response.status).to.be.eq(404)
         })
     })
 
-    it('Unsuccessful Login with incorrect password', () => {
+})
 
-        cy.request({
-            method: 'POST',
-            url: `${Cypress.env("reqres")}/api/login`,
-            body: {
-                email: "eve.holt@reqres.in",
-                password: ""
-            },
-            failOnStatusCode: false
-        }).then((response) => {
-            expect(response.status).to.be.eq(400)
-            expect(response.body.error).to.be.eq('Missing password')
+describe.only("Negative path API general login validation", { tags: ['smoke', 'api'] }, () => {
+    for (let { nameUseCase, requestBody, responseBody } of useCases) {
+
+        it(`Use Case: ${nameUseCase}`, () => {
+            cy.request({
+                method: 'POST',
+                url: `${Cypress.env("reqres")}/api/login`,
+                body: requestBody,
+                failOnStatusCode: false
+            }).then((response) => {
+                expect(response.status).to.eq(400)
+                expect(response.body).to.deep.eq(responseBody)
+            })
         })
-    })
-
-    it('Unsuccessful Login with empty email and password', () => {
-
-        cy.request({
-            method: 'POST',
-            url: `${Cypress.env("reqres")}/api/login`,
-            body: {
-                email: "",
-                password: ""
-            },
-            failOnStatusCode: false
-        }).then((response) => {
-            expect(response.status).to.be.eq(400)
-            expect(response.body.error).to.be.eq('Missing email or username')
-        })
-    })
+    }
 })

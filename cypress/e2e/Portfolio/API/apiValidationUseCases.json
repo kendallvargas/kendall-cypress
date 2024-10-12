@@ -1,0 +1,23 @@
+
+[
+    {
+        "nameUseCase": "Unsuccessfull login with incorrect email and password",
+        "requestBody": {"email": "kendall@test", "password": "1234abcd" },
+        "responseBody": {"error": "user not found"}
+    },
+    {
+        "nameUseCase": "Unsuccessful Login with empty password",
+        "requestBody": {"email": "eve.holt@reqres.in", "password": "" },
+        "responseBody": {"error": "Missing password"}
+    },
+    {
+        "nameUseCase": "Unsuccessful Login with empty email",
+        "requestBody": {"email": "", "password": "1234abcd" },
+        "responseBody": {"error": "Missing email or username"}
+    },
+    {
+        "nameUseCase": "Unsuccessful Login with empty email and password",
+        "requestBody": {"email": "", "password": "" },
+        "responseBody": {"error": "Missing email or username"}
+    }
+]
