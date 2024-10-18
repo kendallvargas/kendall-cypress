@@ -65,17 +65,17 @@ With this flow, it can be easier to detect any issue and find it on the artifact
 ![artifact](https://github.com/user-attachments/assets/9bfca110-1227-434f-a44e-edcd9296c370)
 
 ### **Slack notifications**
-When the GitHub action execution is done, a notification is sent through the Slack channel with the results of the test. 
-Additionally, an email is received with a notification about the results in case the E2E failed. 
+When the GitHub action is executed, a notification with the test results is sent through the Slack channel. 
+Additionally, an email is received with a notification about the results in case the E2E fails. 
 ![cypress_channel](https://github.com/user-attachments/assets/820e1bb1-f365-4f90-9a80-ef31c348ac30)
 ![failure_email](https://github.com/user-attachments/assets/ca674cbf-df26-40f4-a419-9ebf07a5501c)
 
 
 ### **Preview of the Test Runs in headless mode**
 
-https://github.com/user-attachments/assets/2f27d936-b1a7-433f-8f7c-9d23b5f5ec13
+https://github.com/user-attachments/assets/b69c125d-e0ff-4063-9ab4-04ec4ddca578
 
 https://github.com/user-attachments/assets/cd4f2c74-9a2c-4662-8270-f15334425259
 
-https://github.com/user-attachments/assets/e051955e-3fdf-4eea-9797-e7bdf69633ac
+https://github.com/user-attachments/assets/2a2bda31-9a6a-470b-94eb-23197c494273
 
